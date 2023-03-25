@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon main.js",
+    "start": "nodemon main.ts",
     "build": "npx tsc"
   },
   "dependencies": {
