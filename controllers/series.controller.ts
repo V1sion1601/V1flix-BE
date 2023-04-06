@@ -43,17 +43,20 @@ export const SeriesController = {
       throw new Error(err);
     }
   },
-  getFilmById: async (req: Request, res: Response) => {
+  getFilmByTitle: async (req: Request, res: Response) => {
+    const newStr = req.params.title.replace(/[\s_]+/g, " ");
     try {
       const data: ISeries[] = await Series.findOne({
         where: {
-          id: req.params.id_series,
+          title: newStr,
         },
         include: [Images, Episodes],
       });
       if (data) {
         console.log("Find successfully");
         res.json({ status: "success", series: data });
+      } else {
+        console.log("Can't find the series");
       }
     } catch (err: any) {
       throw new Error(err);
