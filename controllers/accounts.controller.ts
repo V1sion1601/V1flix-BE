@@ -32,7 +32,7 @@ export const AccountsController = {
     const match: boolean = await bcrypt.compare(password, data.password);
 
     if (match) {
-      res.status(200).json({ status: "succeed" });
+      res.status(200).json({ status: "succeed", id: data.id });
     } else {
       res.status(200).json({ status: "failed" });
     }

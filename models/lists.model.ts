@@ -1,27 +1,28 @@
+import { Accounts } from "./accounts.model";
 import { sequelize } from "./db";
+import { Series } from "./series.model";
 const { DataTypes } = require("sequelize");
 
-export const Series = sequelize.define(
-  "series",
+export const Lists = sequelize.define(
+  "accounts_series",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    title: {
-      type: DataTypes.STRING,
-    },
-    description: {
-      type: DataTypes.STRING,
-    },
-    total_episodes: {
+    accountId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: Accounts,
+        key: "id",
+      },
     },
-    type: {
-      type: DataTypes.STRING,
-    },
-    view: {
+    seriesId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: Series,
+        key: "id",
+      },
     },
     status: {
       type: DataTypes.STRING,

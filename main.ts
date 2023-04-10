@@ -4,6 +4,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import { setRelationships } from "./relationships";
 import { ImagesRoutes } from "./routes/images.route";
 import { SeriesRoutes } from "./routes/series.route";
+import { ListsRoutes } from "./routes/lists.route";
 require("dotenv").config();
 const express = require("express");
 
@@ -20,6 +21,7 @@ app.listen(Number(port), () => {
 SeriesRoutes(app);
 ImagesRoutes(app);
 AccountsRoutes(app);
+ListsRoutes(app);
 //Relationship
 setRelationships();
 
