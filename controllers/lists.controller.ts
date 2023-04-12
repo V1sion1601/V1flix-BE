@@ -40,21 +40,39 @@ export const ListsController = {
         raw: true,
         where: {
           seriesId: ids,
-          type: "thumbnail",
         },
         attributes: {
           exclude: ["id"],
         },
         order: [["seriesId", "DESC"]],
       });
+      console.log(resultImg);
       let finalResult = data.map((item: any) => ({
         ...item,
-        ...resultImg.find((image: any) => image.seriesId === item.seriesId),
+        images: resultImg.filter(
+          (image: any) => image.seriesId === item.seriesId
+        ),
       }));
 
       res.status(200).json({ status: "good", data: finalResult });
     } else {
       res.json({ status: "failed" });
+    }
+  },
+  getListById: async (req: Request, res: Response) => {
+    const data: any = await Lists.findOne({
+      where: {
+        accountId: req.params.userId,
+        seriesId: req.params.seriesId,
+      },
+      attributes: {
+        exclude: ["accountId", "id"],
+      },
+    });
+    if (data) {
+      res.status(200).json({ status: "succeed", userStatus: data.status });
+    } else {
+      res.status(200).json({ status: "failed" });
     }
   },
 };
