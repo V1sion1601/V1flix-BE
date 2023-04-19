@@ -3,6 +3,9 @@
     "start": "nodemon main.ts",
     "build": "npx tsc"
   },
+  "engines": {
+    "node": ">=16.14"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
