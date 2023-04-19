@@ -5,6 +5,9 @@ import { setRelationships } from "./relationships";
 import { ImagesRoutes } from "./routes/images.route";
 import { SeriesRoutes } from "./routes/series.route";
 import { ListsRoutes } from "./routes/lists.route";
+import { GenersRoutes } from "./routes/geners.route";
+import { FilmsGenersRoutes } from "./routes/films_geners.route";
+
 require("dotenv").config();
 const express = require("express");
 
@@ -22,6 +25,8 @@ SeriesRoutes(app);
 ImagesRoutes(app);
 AccountsRoutes(app);
 ListsRoutes(app);
+GenersRoutes(app);
+FilmsGenersRoutes(app);
 //Relationship
 setRelationships();
 

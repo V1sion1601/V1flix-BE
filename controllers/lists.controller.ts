@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Lists } from "../models/lists.model";
 import { Series } from "../models/series.model";
 import { Images } from "../models/images.model";
+import { ISeries } from "../interface";
 
 export const ListsController = {
   addSeries: async (req: Request, res: Response) => {
@@ -20,10 +21,27 @@ export const ListsController = {
   },
 
   getLists: async (req: Request, res: Response) => {
-    const data: any = await Lists.findAll({
+    const { status } = req.params;
+
+    let newStatus: string = `${status.charAt(0).toUpperCase()}${status.substr(
+      1
+    )}`;
+
+    newStatus = newStatus.replace(/[\s-]+/g, " ");
+    //will fix the query soon
+    const queries =
+      status === "undefined"
+        ? {
+            accountId: req.params.userId,
+          }
+        : {
+            accountId: req.params.userId,
+            status: newStatus,
+          };
+    const data: ISeries[] = await Lists.findAll({
       raw: true,
       where: {
-        accountId: req.params.userId,
+        ...queries,
       },
       attributes: {
         exclude: ["accountId", "id"],
@@ -60,7 +78,7 @@ export const ListsController = {
     }
   },
   getListById: async (req: Request, res: Response) => {
-    const data: any = await Lists.findOne({
+    const data: ISeries = await Lists.findOne({
       where: {
         accountId: req.params.userId,
         seriesId: req.params.seriesId,
@@ -71,6 +89,40 @@ export const ListsController = {
     });
     if (data) {
       res.status(200).json({ status: "succeed", userStatus: data.status });
+    } else {
+      res.status(200).json({ status: "failed" });
+    }
+  },
+  updateStatus: async (req: Request, res: Response) => {
+    const data: ISeries = await Lists.update(
+      {
+        status: req.body.status,
+      },
+      {
+        where: {
+          accountId: req.params.userId,
+          seriesId: req.params.seriesId,
+        },
+      }
+    );
+    console.log(data);
+    if (data) {
+      res.status(200).json({ status: "succeed" });
+    } else {
+      res.status(200).json({ status: "failed" });
+    }
+  },
+
+  deleteStatus: async (req: Request, res: Response) => {
+    const data: any = await Lists.destroy({
+      where: {
+        accountId: req.params.userId,
+        seriesId: req.params.seriesId,
+      },
+    });
+    console.log(data);
+    if (data) {
+      res.status(200).json({ status: "succeed" });
     } else {
       res.status(200).json({ status: "failed" });
     }

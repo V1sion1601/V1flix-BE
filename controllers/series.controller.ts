@@ -3,6 +3,7 @@ import { Images } from "./../models/images.model";
 import { ISeries } from "../interface";
 import { Request, Response } from "express";
 import { Series } from "../models/series.model";
+import { FilmsGeners } from "../models/films_geners.model";
 const { Op } = require("sequelize");
 export const SeriesController = {
   getAllSeries: async (req: Request, res: Response) => {
@@ -66,14 +67,21 @@ export const SeriesController = {
   findAllSeriesByName: async (req: Request, res: Response) => {
     try {
       console.log(req.body);
-      const { status, filter } = req.body;
+      const { status, filter, genre } = req.body;
       const hasStatus = status !== "" && { status };
+      const hasGenere = genre !== "" && {
+        model: FilmsGeners,
+        where: {
+          generId: genre,
+        },
+      };
       const data: ISeries[] = await Series.findAll({
         where: {
           title: { [Op.like]: `%${filter}%` },
           ...hasStatus,
+          ...hasGenere,
         },
-        include: [Images],
+        include: [{ model: Images }],
       });
       if (data) {
         console.log("Find all series successfully");
