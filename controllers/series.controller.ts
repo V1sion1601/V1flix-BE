@@ -7,15 +7,42 @@ import { FilmsGeners } from "../models/films_geners.model";
 const { Op } = require("sequelize");
 export const SeriesController = {
   getAllSeries: async (req: Request, res: Response) => {
-    const data: ISeries[] = await Series.findAll({
-      include: Images,
-      limit: 20,
-      attributes: { exclude: ["season"] },
-    });
+    console.log(req.query);
 
-    if (data) {
-      console.log("Query successfully");
-      res.json({ status: "success", series: data });
+    const currentPage: any = req.query.currentPage;
+    const limitPage: any = req.query.limitPage;
+    if (!currentPage || !limitPage) {
+      const data: ISeries[] | any = await Series.findAll({
+        include: Images,
+        attributes: { exclude: ["season"] },
+      });
+      if (data) {
+        console.log("Query successfully");
+        res.json({
+          status: "success",
+          series: data,
+        });
+      }
+    } else {
+      const data: ISeries[] | any = await Series.findAndCountAll({
+        include: Images,
+        limit: parseInt(limitPage),
+        offset:
+          parseInt(currentPage) > 0
+            ? parseInt(currentPage) + parseInt(limitPage) - 1
+            : 0,
+        attributes: { exclude: ["season"] },
+      });
+      const totalItem = Math.round(data.count / 3);
+      if (data) {
+        console.log("Query successfully");
+        res.json({
+          status: "success",
+          count: totalItem,
+          totalPage: Math.round(totalItem / parseInt(limitPage)),
+          series: data.rows,
+        });
+      }
     }
   },
   //for search
