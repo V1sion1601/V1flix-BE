@@ -72,11 +72,11 @@ export const SeriesController = {
     }
   },
   getFilmByTitle: async (req: Request, res: Response) => {
-    const newStr = req.params.title.replace(/[\s_]+/g, " ");
+    // const newStr = req.params.title.replace(/[\s_]+/g, " ");
     try {
       const data: ISeries[] = await Series.findOne({
         where: {
-          title: newStr,
+          title: { [Op.like]: `%${req.params.title}%` },
         },
         include: [Images, Episodes],
       });
