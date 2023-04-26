@@ -14,6 +14,9 @@ export const GenersController = {
     }
   },
   getGenerByName: async (req: Request, res: Response) => {
+    let currentPage: any = req.query.currentPage || 0;
+    let limitPage: any = req.query.limitPage || 1;
+    console.log(currentPage);
     const data: any = await Geners.findAll({
       raw: true,
       where: {
@@ -26,14 +29,26 @@ export const GenersController = {
       const ids = data.map((gener: any) => {
         return gener["series_geners.seriesId"];
       });
-      const filmData = await Series.findAll({
+      const filmData = await Series.findAndCountAll({
         where: {
           id: ids,
         },
+        limit: parseInt(limitPage),
+        offset:
+          parseInt(currentPage) > 0
+            ? parseInt(currentPage) + parseInt(limitPage) - 1
+            : 0,
         include: [Images],
       });
-      console.log(filmData);
-      if (filmData) res.json({ status: "success", films: filmData });
+      const totalItem = Math.round(filmData.count / 3);
+
+      if (filmData)
+        res.json({
+          status: "success",
+          count: totalItem,
+          totalPage: Math.round(totalItem / parseInt(limitPage)),
+          films: filmData.rows,
+        });
     } else {
       res.json({ status: "failed" });
     }

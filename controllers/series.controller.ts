@@ -85,6 +85,7 @@ export const SeriesController = {
         res.json({ status: "success", series: data });
       } else {
         console.log("Can't find the series");
+        res.status(404).json({ status: "failed" });
       }
     } catch (err: any) {
       throw new Error(err);
@@ -113,6 +114,8 @@ export const SeriesController = {
       if (data) {
         console.log("Find all series successfully");
         res.json({ status: "success", series: data });
+      } else {
+        res.status(404).json({ status: "failed" });
       }
     } catch (err: any) {
       throw new Error(err);
