@@ -15,7 +15,7 @@ export const GenersController = {
   },
   getGenerByName: async (req: Request, res: Response) => {
     let currentPage: any = req.query.currentPage || 0;
-    let limitPage: any = req.query.limitPage || 1;
+    let limitPage: any = req.query.limitPage || 12;
     console.log(currentPage);
     const data: any = await Geners.findAll({
       raw: true,

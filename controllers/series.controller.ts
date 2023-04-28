@@ -15,6 +15,7 @@ export const SeriesController = {
       const data: ISeries[] | any = await Series.findAll({
         include: Images,
         attributes: { exclude: ["season"] },
+        order: [["id", "desc"]],
       });
       if (data) {
         console.log("Query successfully");
@@ -32,6 +33,7 @@ export const SeriesController = {
             ? parseInt(currentPage) + parseInt(limitPage) - 1
             : 0,
         attributes: { exclude: ["season"] },
+        order: [["id", "desc"]],
       });
       const totalItem = Math.round(data.count / 3);
       if (data) {
