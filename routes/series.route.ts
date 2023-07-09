@@ -6,6 +6,10 @@ export const SeriesRoutes = (app: Express) => {
   router.get("/api/series/find/:title", SeriesController.findSeries);
   router.get("/api/series/film/:title", SeriesController.getFilmByTitle);
   router.post("/api/series/query", SeriesController.findAllSeriesByName);
+  router.post("/api/series/create", SeriesController.createSeries);
+  router.put("/api/series/update", SeriesController.updateSeries);
+  router.delete("/api/series/delete", SeriesController.deleteSeries);
+
 
   app.use(router);
 };

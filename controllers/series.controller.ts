@@ -98,6 +98,7 @@ export const SeriesController = {
     try {
       console.log(req.body);
       const { status, filter, genre } = req.body;
+      console.log(status)
       const hasStatus = status !== "" && { status };
       const hasGenere = genre !== "" && {
         model: FilmsGeners,
@@ -123,4 +124,70 @@ export const SeriesController = {
       throw new Error(err);
     }
   },
+  createSeries: async (req: Request, res: Response) => {
+    const data = req.body;
+    console.log(data);
+    try {
+      const [series, created] = await Series.findOrCreate({
+        where: { title: data.title },
+        defaults: data,
+      })
+      console.log(created);
+      if(created) {
+        console.log("Create successfully");
+        res.status(200).json({ status: "success", series: series });
+      } else {
+        res.status(400).json({ status: "failed", msg: "Series existed" });
+      }
+
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  }, 
+  updateSeries: async (req: Request, res: Response) => {
+    const data = {...req.body};
+    delete data.id
+    try {
+      const search = await Series.findOne({where: {
+        id: req.body.id
+      }})
+      if(search) {
+        const result = await Series.update(data, {
+          where: {
+            id: req.body.id
+          }
+        })
+        console.log(result);
+        res.status(200).json({ status: "success", msg: "Update successfully" });
+      } else {
+      res.status(400).json({ status: "failed", msg: "Series can't be updated" });
+
+      }
+    } catch (err: any) {
+      res.status(400).json({ status: "failed", msg: "Series can't be updated" });
+    }
+  }, 
+  deleteSeries: async (req: Request, res: Response) => {
+    try {
+      const search = await Series.findOne({
+        where: {
+          id: req.body.id
+        }
+      })
+      if(search) {
+        const result = await Series.destroy({
+          where: {
+            id: req.body.id
+          }
+        })
+        console.log(result);
+        res.status(200).json({ status: "success", msg: "Delete successfully" });
+      } else {
+        res.status(400).json({ status: "failed", msg: "Series can't be found" });
+      }
+    } catch (err: any) {
+      console.log(err);
+      res.status(400).json({ status: "failed", msg: "Series can't be deleted" });
+    }
+  }, 
 };

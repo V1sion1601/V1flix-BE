@@ -8,6 +8,7 @@ export const Episodes = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true
     },
     title: {
       type: DataTypes.STRING,
@@ -16,6 +17,7 @@ export const Episodes = sequelize.define(
       type: DataTypes.INTEGER,
     },
     source: {
+      //google drive id or cloudinary link
       type: DataTypes.STRING,
     },
     seriesId: {
